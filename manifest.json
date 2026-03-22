@@ -11,143 +11,61 @@
   "settings_schema": {
     "type": "object",
     "properties": {
-      "enabled": {
-        "type": "boolean",
-        "title": "Enable Allergy & Health",
-        "default": false
-      },
-      "latitude": {
-        "type": "number",
-        "title": "Latitude",
-        "description": "Location latitude for health data",
-        "default": 37.7749
-      },
-      "longitude": {
-        "type": "number",
-        "title": "Longitude",
-        "description": "Location longitude for health data",
-        "default": -122.4194
-      },
-      "refresh_seconds": {
-        "type": "integer",
-        "title": "Refresh Interval (seconds)",
-        "default": 600,
-        "minimum": 60
-      }
+      "enabled": {"type": "boolean", "title": "Enable Allergy & Health", "default": false},
+      "latitude": {"type": "number", "title": "Latitude", "description": "Location latitude for health data", "default": 37.7749},
+      "longitude": {"type": "number", "title": "Longitude", "description": "Location longitude for health data", "default": -122.4194},
+      "refresh_seconds": {"type": "integer", "title": "Refresh Interval (seconds)", "default": 600, "minimum": 60}
     }
   },
   "env_vars": [
-    {
-      "name": "HEALTH_LATITUDE",
-      "required": false,
-      "description": "Location latitude for health data",
-      "default": "37.7749"
-    },
-    {
-      "name": "HEALTH_LONGITUDE",
-      "required": false,
-      "description": "Location longitude for health data",
-      "default": "-122.4194"
-    }
+    {"name": "HEALTH_LATITUDE", "required": false, "description": "Location latitude for health data", "default": "37.7749"},
+    {"name": "HEALTH_LONGITUDE", "required": false, "description": "Location longitude for health data", "default": "-122.4194"}
   ],
   "variables": {
-    "simple": [
-      "grass_pollen",
-      "tree_pollen",
-      "weed_pollen",
-      "aqi",
-      "european_aqi",
-      "pm25",
-      "pm10",
-      "allergy_risk",
-      "allergy_risk_color",
-      "respiratory_risk",
-      "flu_risk",
-      "cough_risk",
-      "formatted"
-    ]
-  },
-  "max_lengths": {
-    "grass_pollen": 5,
-    "tree_pollen": 5,
-    "weed_pollen": 5,
-    "aqi": 3,
-    "european_aqi": 3,
-    "pm25": 5,
-    "pm10": 5,
-    "allergy_risk": 9,
-    "allergy_risk_color": 4,
-    "respiratory_risk": 4,
-    "flu_risk": 4,
-    "cough_risk": 4,
-    "formatted": 22
+    "groups": {
+      "pollen": {"label": "Pollen Counts"},
+      "air_quality": {"label": "Air Quality"},
+      "risk": {"label": "Health Risks"},
+      "display": {"label": "Display"}
+    },
+    "simple": {
+      "grass_pollen": {"description": "Grass pollen count", "type": "number", "max_length": 5, "group": "pollen", "example": "42"},
+      "tree_pollen": {"description": "Tree pollen count", "type": "number", "max_length": 5, "group": "pollen", "example": "18"},
+      "weed_pollen": {"description": "Weed pollen count", "type": "number", "max_length": 5, "group": "pollen", "example": "7"},
+      "aqi": {"description": "US Air Quality Index value", "type": "number", "max_length": 3, "group": "air_quality", "example": "45"},
+      "european_aqi": {"description": "European Air Quality Index value", "type": "number", "max_length": 3, "group": "air_quality", "example": "32"},
+      "pm25": {"description": "PM2.5 particulate matter concentration", "type": "number", "max_length": 5, "group": "air_quality", "example": "12.3"},
+      "pm10": {"description": "PM10 particulate matter concentration", "type": "number", "max_length": 5, "group": "air_quality", "example": "25.1"},
+      "allergy_risk": {"description": "Overall allergy risk level (LOW to EXTREME)", "type": "string", "max_length": 9, "group": "risk", "example": "MODERATE"},
+      "allergy_risk_color": {"description": "Color code for allergy risk level", "type": "string", "max_length": 4, "group": "risk", "example": "{63}"},
+      "respiratory_risk": {"description": "Respiratory risk level", "type": "string", "max_length": 4, "group": "risk", "example": "LOW"},
+      "flu_risk": {"description": "Flu risk level", "type": "string", "max_length": 4, "group": "risk", "example": "LOW"},
+      "cough_risk": {"description": "Cough risk level", "type": "string", "max_length": 4, "group": "risk", "example": "LOW"},
+      "formatted": {"description": "Pre-formatted health summary display", "type": "string", "max_length": 22, "group": "display", "example": "Pollen:MOD AQI:45"}
+    }
   },
   "color_rules_schema": {
     "allergy_risk": {
       "type": "match",
       "description": "Color based on allergy risk level",
       "default_rules": [
-        {
-          "condition": "==",
-          "value": "EXTREME",
-          "color": "violet"
-        },
-        {
-          "condition": "==",
-          "value": "VERY HIGH",
-          "color": "red"
-        },
-        {
-          "condition": "==",
-          "value": "HIGH",
-          "color": "orange"
-        },
-        {
-          "condition": "==",
-          "value": "MODERATE",
-          "color": "yellow"
-        },
-        {
-          "condition": "==",
-          "value": "LOW",
-          "color": "green"
-        }
+        {"condition": "==", "value": "EXTREME", "color": "violet"},
+        {"condition": "==", "value": "VERY HIGH", "color": "red"},
+        {"condition": "==", "value": "HIGH", "color": "orange"},
+        {"condition": "==", "value": "MODERATE", "color": "yellow"},
+        {"condition": "==", "value": "LOW", "color": "green"}
       ]
     },
     "aqi": {
       "type": "threshold",
       "description": "Color based on AQI value",
       "default_rules": [
-        {
-          "condition": ">",
-          "value": 300,
-          "color": "violet"
-        },
-        {
-          "condition": ">",
-          "value": 200,
-          "color": "violet"
-        },
-        {
-          "condition": ">",
-          "value": 150,
-          "color": "red"
-        },
-        {
-          "condition": ">",
-          "value": 100,
-          "color": "orange"
-        },
-        {
-          "condition": ">",
-          "value": 50,
-          "color": "yellow"
-        },
-        {
-          "condition": "<=",
-          "value": 50,
-          "color": "green"
-        }
+        {"condition": ">", "value": 300, "color": "violet"},
+        {"condition": ">", "value": 200, "color": "violet"},
+        {"condition": ">", "value": 150, "color": "red"},
+        {"condition": ">", "value": 100, "color": "orange"},
+        {"condition": ">", "value": 50, "color": "yellow"},
+        {"condition": "<=", "value": 50, "color": "green"}
       ]
     }
   },

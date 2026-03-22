@@ -1,6 +1,8 @@
 """Tests for Allergy & Health plugin."""
 
 import json
+from pathlib import Path
+
 import pytest
 from unittest.mock import Mock, patch, MagicMock
 
@@ -410,6 +412,7 @@ class TestHealthPlugin:
     def test_manifest_variables_present(self, manifest, plugin):
         """All manifest variables are returned by fetch_data."""
         expected_vars = manifest["variables"]["simple"]
+        assert isinstance(expected_vars, dict), "simple must be a dict"
 
         with patch("plugins.health.requests.get") as mock_get:
             mock_resp = Mock()
@@ -419,8 +422,8 @@ class TestHealthPlugin:
 
             result = plugin.fetch_data()
             assert result.available is True
-            for var in expected_vars:
-                assert var in result.data, f"Missing variable: {var}"
+            for var_name in expected_vars.keys():
+                assert var_name in result.data, f"Missing variable: {var_name}"
 
 
 # ── Color Mapping ────────────────────────────────────────────────────
@@ -485,3 +488,66 @@ class TestEdgeCases:
         # AQI=100 gives 2.0, PM2.5=50 gives 2.0, Pollen=200 gives 2.0
         score = HealthPlugin.calculate_cough_risk(100, 50, 200)
         assert score == 6.0
+
+
+# ── Manifest Metadata ────────────────────────────────────────────────
+
+
+class TestManifestMetadata:
+    """Tests for rich variable metadata in manifest.json."""
+
+    REQUIRED_FIELDS = {"description", "type", "max_length", "group", "example"}
+    VALID_TYPES = {"string", "number", "boolean"}
+
+    @pytest.fixture(autouse=True)
+    def _load(self):
+        manifest_path = Path(__file__).resolve().parent.parent / "manifest.json"
+        with open(manifest_path) as f:
+            self.manifest = json.load(f)
+        self.groups = self.manifest["variables"]["groups"]
+        self.simple = self.manifest["variables"]["simple"]
+
+    def test_simple_is_dict(self):
+        assert isinstance(self.simple, dict)
+
+    def test_groups_is_dict(self):
+        assert isinstance(self.groups, dict)
+
+    def test_every_variable_has_required_fields(self):
+        for var_name, meta in self.simple.items():
+            missing = self.REQUIRED_FIELDS - set(meta.keys())
+            assert not missing, f"{var_name} missing fields: {missing}"
+
+    def test_variable_types_are_valid(self):
+        for var_name, meta in self.simple.items():
+            assert meta["type"] in self.VALID_TYPES, (
+                f"{var_name} has invalid type: {meta['type']}"
+            )
+
+    def test_max_length_is_positive_int(self):
+        for var_name, meta in self.simple.items():
+            ml = meta["max_length"]
+            assert isinstance(ml, int) and ml > 0, (
+                f"{var_name} max_length must be a positive int, got {ml}"
+            )
+
+    def test_group_references_valid(self):
+        for var_name, meta in self.simple.items():
+            assert meta["group"] in self.groups, (
+                f"{var_name} references unknown group: {meta['group']}"
+            )
+
+    def test_all_groups_are_used(self):
+        used = {meta["group"] for meta in self.simple.values()}
+        for grp in self.groups:
+            assert grp in used, f"Group '{grp}' defined but never referenced"
+
+    def test_example_is_string(self):
+        for var_name, meta in self.simple.items():
+            assert isinstance(meta["example"], str), (
+                f"{var_name} example must be a string"
+            )
+
+    def test_groups_have_label(self):
+        for grp_name, grp_meta in self.groups.items():
+            assert "label" in grp_meta, f"Group '{grp_name}' missing label"
