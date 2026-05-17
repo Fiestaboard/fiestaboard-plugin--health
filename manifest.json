@@ -1,7 +1,7 @@
 {
   "id": "health",
   "name": "Allergy & Health",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Display allergy levels (pollen counts) and health risk indicators for your area using Open-Meteo Air Quality data",
   "author": "FiestaBoard Team",
   "repository": "https://github.com/Fiestaboard/fiestaboard-plugin--health",
@@ -230,41 +230,64 @@
   },
   "fiestaboard_version": ">=2.10.0",
   "demo": {
-    "name": "Health Index Demo",
-    "device_type": "flagship",
-    "template": [
-      "Health Index",
-      "AQI {{health.aqi}}",
-      "Allergy {{health.allergy_risk}}",
-      "{{health.allergy_risk_color}}",
-      "Flu Risk {{health.flu_risk}}",
-      "{{health.formatted}}"
-    ],
-    "line_metadata": [
-      {
-        "alignment": "center",
-        "wrap": false
-      },
-      {
-        "alignment": "center",
-        "wrap": false
-      },
-      {
-        "alignment": "center",
-        "wrap": false
-      },
-      {
-        "alignment": "center",
-        "wrap": false
-      },
-      {
-        "alignment": "center",
-        "wrap": false
-      },
-      {
-        "alignment": "center",
-        "wrap": false
-      }
-    ]
+    "flagship": {
+      "name": "Health Index Demo",
+      "template": [
+        "Health Index",
+        "AQI {{health.aqi}}",
+        "Allergy {{health.allergy_risk}}",
+        "{{health.allergy_risk_color}}",
+        "Flu Risk {{health.flu_risk}}",
+        "{{health.formatted}}"
+      ],
+      "line_metadata": [
+        {
+          "alignment": "center",
+          "wrap": false
+        },
+        {
+          "alignment": "center",
+          "wrap": false
+        },
+        {
+          "alignment": "center",
+          "wrap": false
+        },
+        {
+          "alignment": "center",
+          "wrap": false
+        },
+        {
+          "alignment": "center",
+          "wrap": false
+        },
+        {
+          "alignment": "center",
+          "wrap": false
+        }
+      ]
+    },
+    "note": {
+      "name": "Health Index (Note)",
+      "template": [
+        "HEALTH INDEX",
+        "AQI {{health.aqi}}",
+        "ALLERGY {{health.allergy_risk}}"
+      ],
+      "line_metadata": [
+        {
+          "alignment": "left",
+          "wrap": false
+        },
+        {
+          "alignment": "left",
+          "wrap": false
+        },
+        {
+          "alignment": "left",
+          "wrap": false
+        }
+      ]
+    }
   }
 }
