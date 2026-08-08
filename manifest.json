@@ -246,7 +246,7 @@
       "device_type": "note",
       "rows": [
         "HEALTH INDEX",
-        "AQI 45",
+        "{66}AQI 45 {65}UV 6",
         "ALLERGY MED"
       ]
     }
