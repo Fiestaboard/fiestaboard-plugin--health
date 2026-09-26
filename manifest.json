@@ -1,7 +1,7 @@
 {
   "id": "health",
   "name": "Allergy & Health",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Display allergy levels (pollen counts) and health risk indicators for your area using Open-Meteo Air Quality data",
   "author": "FiestaBoard Team",
   "repository": "https://github.com/Fiestaboard/fiestaboard-plugin--health",
@@ -153,9 +153,9 @@
       "formatted": {
         "description": "Pre-formatted health summary display",
         "type": "string",
-        "max_length": 22,
+        "max_length": 15,
         "group": "display",
-        "example": "Pollen:MOD AQI:45"
+        "example": "ALGY:MODERATE"
       }
     }
   },
@@ -248,6 +248,37 @@
         "HEALTH INDEX",
         "{66}AQI 45 {65}UV 6",
         "ALLERGY MED"
+      ]
+    },
+    {
+      "label": "Note Array (2 wide)",
+      "device_type": "note_array",
+      "notes_wide": 2,
+      "notes_tall": 1,
+      "rows": [
+        "ALLERGY RISK: MODERATE",
+        "AIR QUALITY INDEX: 45",
+        "EUROPEAN AQI: 32"
+      ]
+    },
+    {
+      "label": "Note Array (tall)",
+      "device_type": "note_array",
+      "notes_wide": 1,
+      "notes_tall": 4,
+      "rows": [
+        "  HEALTH INDEX ",
+        "",
+        "ALGY:MODERATE",
+        "AQI: 45",
+        "EU AQI: 32",
+        "GRASS: 42",
+        "TREE POLLEN: 18",
+        "WEED POLLEN: 7",
+        "FLU: 2.1/12",
+        "COUGH: 1.5/12",
+        "RESP:3.2",
+        "PM2.5: 12.3"
       ]
     }
   ],
